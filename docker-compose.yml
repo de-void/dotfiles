@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - db_data:/var/lib/mysql
+     restart: always
+     environment:
+       MYSQL_ROOT_PASSWORD: toor
+       MYSQL_DATABASE: wp_dock
+       MYSQL_USER: root
+       MYSQL_PASSWORD: toor
+
+   wordpress:
+     depends_on:
+       - db
+     image: wordpress:latest
+     volumes:
+      - ./wordpress:/var/www/html
+     ports:
+       - "8000:80"
+     restart: always
+     environment:
+       VIRTUAL_HOST: wordpress.dev
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: root
+       WORDPRESS_DB_PASSWORD: toor
+       WORDPRESS_DB_NAME: wp_dock
+volumes:
+    db_data: {}
